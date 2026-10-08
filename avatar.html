@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avatar Cam — lip sync</title>
+<style>
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html,body{
+    width:100%;
+    height:100%;
+    background:transparent;
+    overflow:hidden;
+  }
+
+  .stage{
+    position:fixed;
+    inset:0;
+    width:100vw;
+    height:100vh;
+    pointer-events:none;
+  }
+
+  /* ---------- Avatar pengganti face cam, mulut gerak ngikutin suara mic ---------- */
+  .avatar-cam{
+    position:absolute;
+    left:50%; top:8vh;
+    transform:translateX(-50%);
+    width:30vh;
+    filter:drop-shadow(0 1vh 2vh rgba(122,59,78,0.28));
+  }
+  .avatar-cam img{
+    display:block;
+    width:100%;
+    height:auto;
+  }
+  .avatar-cam .mouth-layer{
+    position:absolute;
+    left:43.2%;
+    top:65.6%;
+    transform:translate(-50%,-50%);
+    width:8.2%;
+    height:auto;
+    opacity:0;
+    transition:opacity 0.05s linear;
+  }
+  .avatar-cam .mouth-layer.mouth-b{
+    width:5.3%;
+  }
+  .avatar-cam .mouth-layer.show{
+    opacity:1;
+  }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <div class="avatar-cam" id="avatarCam">
+    <img src="avatar.png" alt="avatar">
+    <img class="mouth-layer mouth-a" id="mouthA" src="mouth_open_1.png" alt="">
+    <img class="mouth-layer mouth-b" id="mouthB" src="mouth_open_2.png" alt="">
+  </div>
+</div>
+
+<script>
+  /* ============================================================
+     🎤 LIP-SYNC SEDERHANA — baca volume mic, gerakin mulut avatar.
+     Butuh izin akses mic sekali (di OBS/TikTok Studio: klik kanan
+     browser source ini → "Interact" → izinkan mic saat browser
+     minta). Setelah itu, izinnya keinget terus tiap live.
+     ============================================================ */
+  const mouthA = document.getElementById('mouthA');
+  const mouthB = document.getElementById('mouthB');
+  const TALK_THRESHOLD = 28;      // makin kecil = makin sensitif
+  const SILENCE_HOLD_MS = 150;    // jeda dikit biar ga kedip2 pas suara putus2
+
+  let currentMouthShowsA = true;
+  let lastLoudTime = 0;
+  let lastShapeSwitch = 0;
+
+  function setMouthVisible(visible){
+    if (visible){
+      const now = performance.now();
+      if (now - lastShapeSwitch > 130){
+        currentMouthShowsA = !currentMouthShowsA;
+        lastShapeSwitch = now;
+      }
+      mouthA.classList.toggle('show', currentMouthShowsA);
+      mouthB.classList.toggle('show', !currentMouthShowsA);
+    } else {
+      mouthA.classList.remove('show');
+      mouthB.classList.remove('show');
+    }
+  }
+
+  async function startMicLipSync(){
+    try{
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const source = audioCtx.createMediaStreamSource(stream);
+      const analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 512;
+      analyser.smoothingTimeConstant = 0.6;
+      source.connect(analyser);
+
+      const data = new Uint8Array(analyser.frequencyBinCount);
+
+      function tick(){
+        analyser.getByteFrequencyData(data);
+        let sum = 0;
+        for (let i = 0; i < data.length; i++) sum += data[i];
+        const avg = sum / data.length;
+
+        const now = performance.now();
+        if (avg > TALK_THRESHOLD){
+          lastLoudTime = now;
+          setMouthVisible(true);
+        } else if (now - lastLoudTime > SILENCE_HOLD_MS){
+          setMouthVisible(false);
+        }
+        requestAnimationFrame(tick);
+      }
+      tick();
+      console.log('[LipSync] mic tersambung ✅');
+    } catch(e){
+      console.warn('[LipSync] gagal akses mic — di OBS klik kanan source ini → Interact, lalu izinkan mic.', e);
+    }
+  }
+  startMicLipSync();
+</script>
+
+</body>
+</html>

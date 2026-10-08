@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Overlay — soap bubbles</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--pink:#ff6fa8;--pink2:#ff9cc2;--soft:#ffd6e8;--pale:#fff3f7;--rg1:#f0c8b0;--rg2:#d9a5a0;--rg3:#b76e79;--text:#7a3b4e}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:transparent;overflow:hidden;font-family:'Quicksand',sans-serif}
+.stage{position:fixed;inset:0;pointer-events:none}
+
+/* ===== dasar gelembung sabun ===== */
+.bub{position:absolute;border-radius:50%;isolation:isolate;
+  background:
+    radial-gradient(circle at 28% 22%,#fff 0 4%,rgba(255,255,255,0) 5%),
+    radial-gradient(circle at 72% 80%,rgba(255,255,255,.9) 0 2.5%,rgba(255,255,255,0) 3.5%),
+    linear-gradient(145deg,rgba(255,255,255,.93),rgba(255,226,239,.9));
+  border:.35vh solid #fff;
+  box-shadow:inset 0 0 1.8vh rgba(255,111,168,.45),inset -.8vh -.8vh 1.6vh rgba(240,200,176,.45),0 1vh 2.4vh rgba(183,110,121,.28),0 0 2vh rgba(255,156,194,.35)}
+.bub::after{content:"";position:absolute;inset:6%;border-radius:50%;border:.2vh solid transparent;
+  border-top-color:rgba(255,111,168,.45);border-left-color:rgba(240,200,176,.55);transform:rotate(-20deg);pointer-events:none}
+/* lapisan warna pelangi tipis khas sabun (hanya di pinggir) */
+.bub::before{content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;z-index:2;
+  background:conic-gradient(from 0deg,rgba(255,111,168,0),rgba(150,215,255,.38),rgba(255,240,160,.32),rgba(255,111,168,.38),rgba(200,170,255,.34),rgba(255,111,168,0));
+  -webkit-mask:radial-gradient(circle,transparent 58%,#000 86%);mask:radial-gradient(circle,transparent 58%,#000 86%);
+  animation:film 11s linear infinite}
+@keyframes film{to{transform:rotate(360deg)}}
+.night-on .bub{box-shadow:inset 0 0 1.8vh rgba(255,111,168,.45),0 0 3vh rgba(255,156,194,.8)}
+
+/* ===== gelembung nama ===== */
+.name-bub{top:1.8vh;left:50%;width:27vh;height:13vh;margin-left:-13.5vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;animation:bobA 7s ease-in-out infinite}
+.name{font-family:'Dancing Script',cursive;font-weight:700;font-size:3.3vh;line-height:1.1;color:var(--rg3);
+  background:linear-gradient(90deg,var(--rg3),var(--pink) 55%,var(--rg3));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.tagline{font-size:1.05vh;font-weight:700;color:var(--text);margin-top:.2vh;max-width:22vh}
+.live{margin-top:.5vh;font-size:1.1vh;font-weight:700;color:var(--rg3);display:flex;align-items:center;gap:.5vh}
+.live b{width:.9vh;height:.9vh;border-radius:50%;background:var(--pink);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{transform:scale(1.5);opacity:.5}}
+
+/* ===== gelembung info (WAJIB TERLIHAT) ===== */
+.info{display:flex;align-items:center;justify-content:center;gap:1vh;padding:2.4vh 4.4vh;
+  font-weight:700;font-size:2.5vh;color:var(--text);white-space:nowrap;border-radius:50%/50%;text-shadow:0 .1vh 0 #fff}
+.info span.e{font-size:2.6vh}
+.info.a{top:17vh;left:3.5vw;animation:bobA 6s ease-in-out infinite}
+.info.b{top:28vh;right:3.5vw;animation:bobB 7s ease-in-out infinite}
+@keyframes bobA{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-1vh) rotate(1deg)}}
+@keyframes bobB{0%,100%{transform:translateY(-.6vh) rotate(1deg)}50%{transform:translateY(.8vh) rotate(-1deg)}}
+
+/* ===== gelembung kecil dekorasi ===== */
+.mini{position:absolute;top:100vh;border-radius:50%;background:radial-gradient(circle at 30% 28%,#fff 0 12%,rgba(255,214,232,.35) 40%,rgba(255,156,194,.25));
+  border:.2vh solid rgba(255,255,255,.9);opacity:0;animation:rise var(--dur) linear infinite var(--delay)}
+@keyframes rise{0%{opacity:0;transform:translate(0,0)}10%{opacity:.85}50%{transform:translate(var(--dx),-55vh)}90%{opacity:.8}100%{opacity:0;transform:translate(0,-112vh)}}
+
+/* ===== gelembung pesan naik ===== */
+.msg{width:15vh;height:15vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:2vh;font-weight:700;font-size:1.5vh;color:var(--text);line-height:1.25}
+
+/* ===== gelembung besar di tengah (ajakan & milestone) ===== */
+.alert{width:23vh;height:23vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3vh;z-index:5;
+  font-weight:700;font-size:1.9vh;color:var(--text);line-height:1.3}
+.alert small{font-size:1.1vh;color:var(--rg3);margin-bottom:.4vh}
+.alert em{font-style:normal;color:var(--pink);font-size:2.3vh;display:block;max-width:100%}
+.alert.gold{background:
+    radial-gradient(circle at 28% 22%,#fff 0 4%,rgba(255,255,255,0) 5%),
+    linear-gradient(145deg,rgba(255,255,255,.95),rgba(255,214,200,.92))}
+.spark{position:absolute;left:0;top:0;color:#fff;text-shadow:0 0 1vh var(--pink);font-size:2.2vh}
+.drop{position:absolute;left:0;top:0;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,rgba(255,156,194,.55));border:.15vh solid #fff}
+.heart{position:absolute;left:0;top:0;font-size:2.8vh;filter:drop-shadow(0 .2vh .4vh rgba(183,110,121,.35));opacity:0}
+
+/* ===== target waktu live & tap tap ===== */
+.goal,.tap{bottom:3vh;display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--text);font-weight:700}
+.goal{left:3.5vw;width:31vh;height:12vh;border-radius:50%/50%;animation:bobA 8s ease-in-out infinite}
+.goal .quote{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 4.5vh;opacity:0}
+.goal .qt{font-size:1.6vh;line-height:1.3;text-shadow:0 .1vh 0 #fff}
+.goal small{margin-top:.5vh;font-size:1.05vh;color:var(--rg3)}
+.tap{right:3.5vw;width:21vh;height:7.5vh;border-radius:50%/50%;font-size:1.9vh;gap:.9vh}
+.tap .hand{display:inline-block;font-size:2.4vh;animation:tapping 1.2s ease-in-out infinite;transform-origin:50% 90%}
+.tap .love{display:inline-block;animation:pulse 1.2s infinite}
+@keyframes tapping{0%,100%{transform:translateY(0) rotate(0)}40%{transform:translateY(-.9vh) rotate(-8deg)}55%{transform:translateY(.2vh) scale(.92)}}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="bub name-bub">
+    <div class="name" id="name"></div>
+    <div class="tagline" id="tagline"></div>
+    <div class="live"><b></b>LIVE <span id="timer">00:00:00</span> · <span id="handle"></span></div>
+  </div>
+
+  <div class="bub info a"><span class="e">💗</span><span id="info1"></span></div>
+  <div class="bub info b"><span class="e">🎮</span><span id="info2"></span></div>
+
+  <div class="bub goal"><div class="quote" id="quote"><span class="qt" id="qText"></span><small id="qRef"></small></div></div>
+  <div class="bub tap" id="tapBub"><span class="hand">👆</span><span>tap tap</span><span class="love">💗</span></div>
+</div>
+
+<script>
+/* =========================================================
+   PENGATURAN — ubah di sini saja (tidak perlu TikFinity)
+   Bisa juga lewat link: ?name=Nama&handle=@akun&goal=90&sound=1
+   ========================================================= */
+const CONFIG = {
+  displayName:  "Celia.Ciel",
+  tagline:      "Streamer ramah dan tidak sombong 🎀",
+  socialHandle: "@celia456_",
+  info1: "Support on bio",     // gelembung kiri
+  info2: "Open mabar",         // gelembung kanan
+  messages: ["makasih udah mampir 💗","jangan lupa like & follow 🎀","sampai jumpa di live selanjutnya 🌸"],
+  messageEverySeconds: 10,
+
+  /* kata-kata positif di gelembung kiri bawah, berganti sendiri */
+  quoteEverySeconds: 14,
+  quotes: [
+    { t: "Tuhan itu gembalaku, aku tidak akan kekurangan 🌷", r: "Mazmur 23:1" },
+    { t: "Tuhan dekat pada orang yang patah hati 🤍",          r: "Mazmur 34:19" },
+    { t: "Damai Tuhan menjaga hati dan pikiranmu 🕊️",         r: "Filipi 4:7" },
+    { t: "Segala sesuatu indah pada waktunya 🌅",              r: "Pengkhotbah 3:11" },
+    { t: "Kamu berharga dan dikasihi 🌹",                      r: "Yesaya 43:4" },
+    { t: "Kasih tidak pernah berkesudahan 💝",                 r: "1 Korintus 13:8" }
+  ],
+
+  /* live baru dikenali otomatis; gelembung "udah live X" muncul tiap kelipatan ini (0 = matikan) */
+  newSessionGapMinutes: 20,    // overlay mati/tertutup lebih dari ini = live baru, hitungan mulai dari nol otomatis
+  milestoneEveryMinutes: 30,
+
+  /* ajakan bergilir di tengah layar */
+  ctaEverySeconds: 75,
+  ctas: [
+    { small: "tap tap ✦",  main: "orang baik tap-tap layar", line: "biar live-nya makin rame 💗", rain: true },
+    { small: "yuk ✦",      main: "follow dulu",          line: "biar ga ketinggalan live 🎀" },
+    { small: "share ✦",    main: "carry acu bang",     line: "aku kan bot 🌸" },
+    { small: "ngobrol ✦",  main: "main bang ti di gendong",     line: "aku kan jago ✨" }
+  ],
+
+  tapRainEverySeconds: 20,     // hujan hati dari tombol tap tap
+  sound: false                 // suara "pop" lembut (true kalau mau)
+};
+
+/* override lewat URL (opsional) */
+(function(){
+  const p = new URLSearchParams(location.search);
+  if (p.get('name'))    CONFIG.displayName  = p.get('name');
+  if (p.get('handle'))  CONFIG.socialHandle = p.get('handle');
+  if (p.get('tagline')) CONFIG.tagline      = p.get('tagline');
+  if (p.get('sound') === '1') CONFIG.sound = true;
+  if (p.get('reset') === '1') { try{ localStorage.removeItem('ov_start'); localStorage.removeItem('ov_last'); localStorage.removeItem('ov_goalDone'); }catch(e){} }
+})();
+
+/* =========================================================
+   UTIL
+   ========================================================= */
+const $ = id => document.getElementById(id);
+const stage = $('stage');
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const vh = () => innerHeight / 100;
+const pad = n => String(n).padStart(2, '0');
+const T = (x, y, s = 1) => `translate(${x}px,${y}px) scale(${s})`;
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem('ov_' + k); return v === null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem('ov_' + k, JSON.stringify(v)); }catch(e){} }
+};
+
+$('name').textContent    = CONFIG.displayName;
+$('tagline').textContent = CONFIG.tagline;
+$('handle').textContent  = CONFIG.socialHandle;
+$('info1').textContent   = CONFIG.info1;
+$('info2').textContent   = CONFIG.info2;
+
+/* waktu mulai live: tersimpan, jadi refresh overlay tidak mengulang dari nol.
+   Otomatis mulai baru kalau sudah lewat 12 jam. Paksa ulang: tambahkan ?reset=1 atau tekan R */
+let start = store.get('start', 0);
+const lastSeen = store.get('last', 0);
+if (!start || !lastSeen || Date.now() - lastSeen > CONFIG.newSessionGapMinutes * 60000 || Date.now() - start > 24 * 3600 * 1000) {
+  start = Date.now(); store.set('start', start); store.set('goalDone', false);
+}
+store.set('last', Date.now());
+setInterval(() => store.set('last', Date.now()), 5000);
+
+/* gelembung kecil dekorasi di tepi kiri & kanan */
+for (let i = 0; i < 14; i++) {
+  const m = document.createElement('span'), z = 1.4 + Math.random() * 2.6;
+  m.className = 'mini';
+  m.style.cssText = `width:${z}vh;height:${z}vh;left:${i%2 ? 2+Math.random()*9 : 89+Math.random()*8}vw;--dur:${14+Math.random()*10}s;--delay:-${Math.random()*20}s;--dx:${Math.random()*6-3}vw`;
+  stage.appendChild(m);
+}
+
+/* suara pop (opsional) */
+let actx = null;
+function popSound(){
+  if (!CONFIG.sound) return;
+  try{
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state === 'suspended') actx.resume();
+    const o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime;
+    o.type = 'sine';
+    o.frequency.setValueAtTime(700 + Math.random()*250, t);
+    o.frequency.exponentialRampToValueAtTime(180, t + .12);
+    g.gain.setValueAtTime(.12, t);
+    g.gain.exponentialRampToValueAtTime(.001, t + .14);
+    o.connect(g).connect(actx.destination);
+    o.start(t); o.stop(t + .15);
+  }catch(e){}
+}
+
+/* efek pecah: kilau + tetesan kecil */
+function burst(cx, cy, n = 10){
+  popSound();
+  for (let i = 0; i < n; i++) {
+    const s = document.createElement('span');
+    s.className = 'spark'; s.textContent = i % 2 ? '✦' : '✧';
+    stage.appendChild(s);
+    const a = (i/n) * Math.PI * 2, d = (6 + Math.random()*6) * vh();
+    s.animate([{transform:`translate(${cx}px,${cy}px) scale(.4)`,opacity:1},
+               {transform:`translate(${cx+Math.cos(a)*d}px,${cy+Math.sin(a)*d}px) scale(1.2)`,opacity:0}],
+              {duration:800, easing:'ease-out', fill:'forwards'});
+    setTimeout(() => s.remove(), 850);
+  }
+  for (let i = 0; i < Math.ceil(n/2); i++) {
+    const d = document.createElement('span'), z = (.7 + Math.random()*1.1) * vh();
+    d.className = 'drop'; d.style.width = d.style.height = z + 'px';
+    stage.appendChild(d);
+    const a = Math.random() * Math.PI * 2, r = (4 + Math.random()*8) * vh();
+    d.animate([{transform:`translate(${cx}px,${cy}px)`,opacity:.95},
+               {transform:`translate(${cx+Math.cos(a)*r}px,${cy+Math.sin(a)*r+3*vh()}px)`,opacity:0}],
+              {duration:900, easing:'ease-out', fill:'forwards'});
+    setTimeout(() => d.remove(), 950);
+  }
+}
+async function popAndRemove(el, cx, cy){
+  await el.animate([{opacity:1,transform:el.style.transform+' scale(1)'},{opacity:0,transform:el.style.transform+' scale(1.3)'}],
+                   {duration:260, fill:'forwards'}).finished;
+  burst(cx, cy); el.remove();
+}
+
+/* =========================================================
+   PESAN OTOMATIS NAIK SEBAGAI GELEMBUNG
+   ========================================================= */
+let mi = 0;
+async function sendMessage(){
+  const b = document.createElement('div'), V = vh(), size = 15 * V;
+  b.className = 'bub msg'; b.textContent = CONFIG.messages[mi++ % CONFIG.messages.length];
+  const x = innerWidth * (0.3 + Math.random()*0.35) - size/2, y0 = 78*V, y1 = 40*V;
+  b.style.left = '0px'; b.style.top = '0px'; b.style.transform = T(x, y0);
+  stage.appendChild(b);
+  await b.animate([{opacity:0,transform:T(x,y0)},{opacity:1,transform:T(x+3*V,y0-6*V),offset:.12},
+                   {transform:T(x-3*V,(y0+y1)/2),offset:.55},{opacity:1,transform:T(x+2*V,y1+3*V),offset:.9},{opacity:1,transform:T(x,y1)}],
+                  {duration:9000, easing:'linear', fill:'forwards'}).finished;
+  b.style.transform = T(x, y1);
+  await popAndRemove(b, x + size/2, y1 + size/2);
+}
+if (CONFIG.messages.length) {
+  setTimeout(sendMessage, 3000);
+  setInterval(sendMessage, CONFIG.messageEverySeconds * 1000 + 9000);
+}
+
+/* =========================================================
+   HUJAN HATI dari tombol "tap tap" (pengganti tap tap asli)
+   ========================================================= */
+const HEARTS = ['💗','💖','💕','🎀','🌸','✨'];
+function heartRain(n = 10){
+  const r = $('tapBub').getBoundingClientRect(), V = vh();
+  const cx = r.left + r.width/2 - 1.4*V, cy = r.top;
+  for (let i = 0; i < n; i++) {
+    const h = document.createElement('span');
+    h.className = 'heart'; h.textContent = HEARTS[Math.floor(Math.random() * HEARTS.length)];
+    h.style.fontSize = (2 + Math.random() * 1.8) + 'vh';
+    stage.appendChild(h);
+    const sw = () => (Math.random() * 10 - 5) * V, rise = (30 + Math.random() * 28) * V, dur = 3200 + Math.random() * 1400;
+    const a = h.animate([
+      {transform:T(cx + sw()*.3, cy, .5), opacity:0},
+      {transform:T(cx + sw(), cy - rise*.25, 1), opacity:1, offset:.15},
+      {transform:T(cx + sw(), cy - rise*.6, 1)},
+      {transform:T(cx + sw(), cy - rise, 1.15), opacity:0}
+    ], {duration:dur, delay:i * 140, easing:'ease-out', fill:'forwards'});
+    a.onfinish = () => h.remove();
+  }
+}
+setTimeout(() => heartRain(8), 6000);
+setInterval(() => heartRain(8 + Math.floor(Math.random() * 5)), CONFIG.tapRainEverySeconds * 1000);
+
+/* =========================================================
+   GELEMBUNG BESAR DI TENGAH (ajakan bergilir & milestone) — antre satu per satu
+   ========================================================= */
+const queue = []; let busy = false;
+function showAlert(a){ queue.push(a); if (!busy) next(); }
+window.showAlert = showAlert;
+
+async function next(){
+  if (!queue.length) { busy = false; return; }
+  busy = true;
+  const a = queue.shift(), V = vh(), size = 23 * V;
+  const b = document.createElement('div');
+  b.className = 'bub alert' + (a.gold ? ' gold' : '');
+  const small = document.createElement('small'), em = document.createElement('em');
+  small.textContent = a.small; em.textContent = a.main;
+  b.append(small, em, document.createTextNode(a.line));
+
+  const x = innerWidth/2 - size/2, y = 44*V;
+  b.style.left = '0px'; b.style.top = '0px'; b.style.transform = T(x, 106*V);
+  stage.appendChild(b);
+  await b.animate([{transform:T(x,106*V,.6),opacity:0},{transform:T(x-3*V,80*V,.9),opacity:1,offset:.5},{transform:T(x+2*V,y+3*V,1),offset:.85},{transform:T(x,y,1)}],
+                  {duration:1700, easing:'ease-out', fill:'forwards'}).finished;
+  if (a.rain) heartRain(12);
+  await b.animate([{transform:T(x,y)},{transform:T(x,y-1.2*V,1.03)},{transform:T(x,y)}],
+                  {duration:3200, easing:'ease-in-out', fill:'forwards'}).finished;
+  b.style.transform = T(x, y);
+  await popAndRemove(b, x + size/2, y + size/2);
+  burst(x + size/2, y + size/2, 8);
+  await wait(400);
+  next();
+}
+
+/* ajakan bergilir */
+let ci = 0;
+function nextCta(){ showAlert({ ...CONFIG.ctas[ci++ % CONFIG.ctas.length] }); }
+if (CONFIG.ctas.length) {
+  setTimeout(nextCta, 20000);
+  setInterval(nextCta, CONFIG.ctaEverySeconds * 1000);
+}
+
+/* =========================================================
+   TARGET WAKTU LIVE + MILESTONE (jalan sendiri, tanpa data luar)
+   ========================================================= */
+const fmtHM = ms => {
+  const m = Math.floor(ms / 60000), h = Math.floor(m / 60), r = m % 60;
+  if (h === 0) return `${r} mnt`;
+  return r ? `${h} jam ${r} mnt` : `${h} jam`;
+};
+let lastMile = CONFIG.milestoneEveryMinutes ? Math.floor((Date.now() - start) / (CONFIG.milestoneEveryMinutes * 60000)) : 0;
+
+function milestoneText(min){
+  if (min < 60) return `${min} menit`;
+  const h = Math.floor(min / 60), m = min % 60;
+  return m ? `${h} jam ${m} menit` : `${h} jam`;
+}
+
+function tick(){
+  const el = Date.now() - start;
+  const s = Math.floor(el / 1000);
+  $('timer').textContent = `${pad(Math.floor(s/3600))}:${pad(Math.floor(s/60)%60)}:${pad(s%60)}`;
+
+  const stepMs = Math.max(1, CONFIG.milestoneEveryMinutes || 30) * 60000;
+  if (CONFIG.milestoneEveryMinutes) {
+    const k = Math.floor(el / stepMs);
+    if (k > lastMile) { lastMile = k; milestone(k * CONFIG.milestoneEveryMinutes); }
+  }
+}
+function milestone(min){
+  showAlert({ gold:true, rain:true, small:'udah live ✦', main: milestoneText(min), line:'makasih yang masih nemenin 🌸' });
+}
+tick(); setInterval(tick, 1000);
+
+/* =========================================================
+   KATA-KATA POSITIF BERGANTI (gelembung kiri bawah)
+   ========================================================= */
+let qi = Math.floor(Math.random() * Math.max(1, CONFIG.quotes.length));
+async function showQuote(first){
+  if (!CONFIG.quotes.length) return;
+  const box = $('quote'), q = CONFIG.quotes[qi++ % CONFIG.quotes.length];
+  if (!first) await box.animate([{opacity:1},{opacity:0}], {duration:500, fill:'forwards'}).finished;
+  $('qText').textContent = q.t; $('qRef').textContent = q.r;
+  box.animate([{opacity:0},{opacity:1}], {duration:700, fill:'forwards'});
+}
+showQuote(true);
+setInterval(showQuote, CONFIG.quoteEverySeconds * 1000);
+
+/* siang / malam: glow lebih terang saat malam */
+function dayNight(){ const h = new Date().getHours(); document.body.classList.toggle('night-on', h >= 18 || h < 6); }
+dayNight(); setInterval(dayNight, 5 * 60 * 1000);
+
+/* =========================================================
+   TES (tekan tombol di browser; di TikTok Studio tidak perlu)
+   T = ajakan berikutnya · H = hujan hati · M = milestone · R = ulang waktu live dari nol
+   ========================================================= */
+addEventListener('keydown', e => {
+  const k = e.key.toLowerCase();
+  if (k === 't') nextCta();
+  if (k === 'h') heartRain(14);
+  if (k === 'm') milestone(30);
+  if (k === 'r') { start = Date.now(); store.set('start', start); store.set('goalDone', false); lastMile = 0; tick(); }
+});
+</script>
+</body>
+</html>

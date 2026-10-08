@@ -30,20 +30,20 @@ html,body{width:100%;height:100%;background:transparent;overflow:hidden;font-fam
 .night-on .bub{box-shadow:inset 0 0 1.8vh rgba(255,111,168,.45),0 0 3vh rgba(255,156,194,.8)}
 
 /* ===== gelembung nama ===== */
-.name-bub{top:1.8vh;left:50%;width:27vh;height:13vh;margin-left:-13.5vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;animation:bobA 7s ease-in-out infinite}
-.name{font-family:'Dancing Script',cursive;font-weight:700;font-size:3.3vh;line-height:1.1;color:var(--rg3);
+.name-bub{top:1.8vh;left:50%;width:24vh;height:11.5vh;margin-left:-12vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;animation:bobA 7s ease-in-out infinite}
+.name{font-family:'Dancing Script',cursive;font-weight:700;font-size:3vh;line-height:1.1;color:var(--rg3);
   background:linear-gradient(90deg,var(--rg3),var(--pink) 55%,var(--rg3));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.tagline{font-size:1.05vh;font-weight:700;color:var(--text);margin-top:.2vh;max-width:22vh}
-.live{margin-top:.5vh;font-size:1.1vh;font-weight:700;color:var(--rg3);display:flex;align-items:center;gap:.5vh}
+.tagline{font-size:.95vh;font-weight:700;color:var(--text);margin-top:.2vh;max-width:20vh}
+.live{margin-top:.4vh;font-size:1vh;font-weight:700;color:var(--rg3);display:flex;align-items:center;gap:.5vh}
 .live b{width:.9vh;height:.9vh;border-radius:50%;background:var(--pink);animation:pulse 1.6s infinite}
 @keyframes pulse{50%{transform:scale(1.5);opacity:.5}}
 
 /* ===== gelembung info (WAJIB TERLIHAT) ===== */
-.info{display:flex;align-items:center;justify-content:center;gap:1vh;padding:2.4vh 4.4vh;
-  font-weight:700;font-size:2.5vh;color:var(--text);white-space:nowrap;border-radius:50%/50%;text-shadow:0 .1vh 0 #fff}
-.info span.e{font-size:2.6vh}
-.info.a{top:17vh;left:3.5vw;animation:bobA 6s ease-in-out infinite}
-.info.b{top:28vh;right:3.5vw;animation:bobB 7s ease-in-out infinite}
+.info{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2vh;width:12vh;height:9.5vh;padding:1vh;
+  font-weight:700;font-size:1.4vh;line-height:1.15;text-align:center;color:var(--text);border-radius:50%;text-shadow:0 .1vh 0 #fff}
+.info span.e{font-size:1.9vh;line-height:1}
+.info.a{top:3.5vh;left:1.2vh;animation:bobA 6s ease-in-out infinite}
+.info.b{top:3.5vh;right:1.2vh;animation:bobB 7s ease-in-out infinite}
 @keyframes bobA{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-1vh) rotate(1deg)}}
 @keyframes bobB{0%,100%{transform:translateY(-.6vh) rotate(1deg)}50%{transform:translateY(.8vh) rotate(-1deg)}}
 
@@ -53,28 +53,28 @@ html,body{width:100%;height:100%;background:transparent;overflow:hidden;font-fam
 @keyframes rise{0%{opacity:0;transform:translate(0,0)}10%{opacity:.85}50%{transform:translate(var(--dx),-55vh)}90%{opacity:.8}100%{opacity:0;transform:translate(0,-112vh)}}
 
 /* ===== gelembung pesan naik ===== */
-.msg{width:15vh;height:15vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:2vh;font-weight:700;font-size:1.5vh;color:var(--text);line-height:1.25}
+.msg{width:11vh;height:11vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:1.4vh;font-weight:700;font-size:1.15vh;color:var(--text);line-height:1.25}
 
 /* ===== gelembung besar di tengah (ajakan & milestone) ===== */
-.alert{width:23vh;height:23vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3vh;z-index:5;
-  font-weight:700;font-size:1.9vh;color:var(--text);line-height:1.3}
-.alert small{font-size:1.1vh;color:var(--rg3);margin-bottom:.4vh}
-.alert em{font-style:normal;color:var(--pink);font-size:2.3vh;display:block;max-width:100%}
+.alert{width:14vh;height:14vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1.4vh;z-index:5;
+  font-weight:700;font-size:1.1vh;color:var(--text);line-height:1.25}
+.alert small{font-size:.85vh;color:var(--rg3);margin-bottom:.3vh}
+.alert em{font-style:normal;color:var(--pink);font-size:1.4vh;display:block;max-width:100%}
 .alert.gold{background:
     radial-gradient(circle at 28% 22%,#fff 0 4%,rgba(255,255,255,0) 5%),
     linear-gradient(145deg,rgba(255,255,255,.95),rgba(255,214,200,.92))}
 .spark{position:absolute;left:0;top:0;color:#fff;text-shadow:0 0 1vh var(--pink);font-size:2.2vh}
 .drop{position:absolute;left:0;top:0;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,rgba(255,156,194,.55));border:.15vh solid #fff}
-.heart{position:absolute;left:0;top:0;font-size:2.8vh;filter:drop-shadow(0 .2vh .4vh rgba(183,110,121,.35));opacity:0}
+.heart{position:absolute;left:0;top:0;font-size:2vh;filter:drop-shadow(0 .2vh .4vh rgba(183,110,121,.35));opacity:0}
 
 /* ===== target waktu live & tap tap ===== */
 .goal,.tap{bottom:3vh;display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--text);font-weight:700}
-.goal{left:3.5vw;width:31vh;height:12vh;border-radius:50%/50%;animation:bobA 8s ease-in-out infinite}
-.goal .quote{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 4.5vh;opacity:0}
-.goal .qt{font-size:1.6vh;line-height:1.3;text-shadow:0 .1vh 0 #fff}
-.goal small{margin-top:.5vh;font-size:1.05vh;color:var(--rg3)}
-.tap{right:3.5vw;width:21vh;height:7.5vh;border-radius:50%/50%;font-size:1.9vh;gap:.9vh}
-.tap .hand{display:inline-block;font-size:2.4vh;animation:tapping 1.2s ease-in-out infinite;transform-origin:50% 90%}
+.goal{left:1.2vh;width:27vh;height:9vh;border-radius:50%/50%;animation:bobA 8s ease-in-out infinite}
+.goal .quote{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 3.4vh;opacity:0}
+.goal .qt{font-size:1.3vh;line-height:1.25;text-shadow:0 .1vh 0 #fff}
+.goal small{margin-top:.3vh;font-size:.9vh;color:var(--rg3)}
+.tap{right:1.2vh;width:15.5vh;height:6vh;border-radius:50%/50%;font-size:1.5vh;gap:.6vh}
+.tap .hand{display:inline-block;font-size:1.9vh;animation:tapping 1.2s ease-in-out infinite;transform-origin:50% 90%}
 .tap .love{display:inline-block;animation:pulse 1.2s infinite}
 @keyframes tapping{0%,100%{transform:translateY(0) rotate(0)}40%{transform:translateY(-.9vh) rotate(-8deg)}55%{transform:translateY(.2vh) scale(.92)}}
 
@@ -107,8 +107,8 @@ const CONFIG = {
   socialHandle: "@celia456_",
   info1: "Support on bio",     // gelembung kiri
   info2: "Open mabar",         // gelembung kanan
-  messages: ["makasih udah mampir 💗","jangan lupa like & follow 🎀","sampai jumpa di live selanjutnya 🌸"],
-  messageEverySeconds: 10,
+  messages: ["makasih udah mampir 💗","jangan lupa like & follow yaa 🎀","sampai jumpa di live selanjutnya 🌸"],
+  messageEverySeconds: 20,
 
   /* kata-kata positif di gelembung kiri bawah, berganti sendiri */
   quoteEverySeconds: 14,
@@ -126,15 +126,15 @@ const CONFIG = {
   milestoneEveryMinutes: 30,
 
   /* ajakan bergilir di tengah layar */
-  ctaEverySeconds: 75,
+  ctaEverySeconds: 90,
   ctas: [
-    { small: "tap tap ✦",  main: "orang baik tap-tap layar", line: "biar live-nya makin rame 💗", rain: true },
-    { small: "yuk ✦",      main: "follow dulu",          line: "biar ga ketinggalan live 🎀" },
-    { small: "share ✦",    main: "carry acu bang",     line: "aku kan bot 🌸" },
-    { small: "ngobrol ✦",  main: "main bang ti di gendong",     line: "aku kan jago ✨" }
+    { small: "tap tap ✦",  main: "tap tap yaa",   line: "biar makin rame 💗", rain: true },
+    { small: "yuk ✦",      main: "follow dulu",   line: "biar ga ketinggalan 🎀" },
+    { small: "share ✦",    main: "ajak bestie",   line: "share live ini 🌸" },
+    { small: "ngobrol ✦",  main: "tulis komen",   line: "aku baca lho ✨" }
   ],
 
-  tapRainEverySeconds: 20,     // hujan hati dari tombol tap tap
+  tapRainEverySeconds: 30,     // hujan hati dari tombol tap tap
   sound: false                 // suara "pop" lembut (true kalau mau)
 };
 
@@ -239,14 +239,16 @@ async function popAndRemove(el, cx, cy){
    ========================================================= */
 let mi = 0;
 async function sendMessage(){
-  const b = document.createElement('div'), V = vh(), size = 15 * V;
+  const b = document.createElement('div'), V = vh(), size = 11 * V;
   b.className = 'bub msg'; b.textContent = CONFIG.messages[mi++ % CONFIG.messages.length];
-  const x = innerWidth * (0.3 + Math.random()*0.35) - size/2, y0 = 78*V, y1 = 40*V;
+  /* lewat di pinggir kiri atau kanan supaya tengah layar game tetap lega */
+  const left = Math.random() < .5, dir = left ? 1 : -1;
+  const x = left ? 1.2*V : innerWidth - size - 1.2*V, y0 = 66*V, y1 = 44*V;
   b.style.left = '0px'; b.style.top = '0px'; b.style.transform = T(x, y0);
   stage.appendChild(b);
-  await b.animate([{opacity:0,transform:T(x,y0)},{opacity:1,transform:T(x+3*V,y0-6*V),offset:.12},
-                   {transform:T(x-3*V,(y0+y1)/2),offset:.55},{opacity:1,transform:T(x+2*V,y1+3*V),offset:.9},{opacity:1,transform:T(x,y1)}],
-                  {duration:9000, easing:'linear', fill:'forwards'}).finished;
+  await b.animate([{opacity:0,transform:T(x,y0)},{opacity:1,transform:T(x+dir*1.5*V,y0-4*V),offset:.12},
+                   {transform:T(x+dir*.2*V,(y0+y1)/2),offset:.55},{opacity:1,transform:T(x+dir*1.2*V,y1+2*V),offset:.9},{opacity:1,transform:T(x,y1)}],
+                  {duration:8000, easing:'linear', fill:'forwards'}).finished;
   b.style.transform = T(x, y1);
   await popAndRemove(b, x + size/2, y1 + size/2);
 }
@@ -265,9 +267,9 @@ function heartRain(n = 10){
   for (let i = 0; i < n; i++) {
     const h = document.createElement('span');
     h.className = 'heart'; h.textContent = HEARTS[Math.floor(Math.random() * HEARTS.length)];
-    h.style.fontSize = (2 + Math.random() * 1.8) + 'vh';
+    h.style.fontSize = (1.5 + Math.random() * 1.1) + 'vh';
     stage.appendChild(h);
-    const sw = () => (Math.random() * 10 - 5) * V, rise = (30 + Math.random() * 28) * V, dur = 3200 + Math.random() * 1400;
+    const sw = () => (Math.random() * 6 - 3) * V, rise = (14 + Math.random() * 14) * V, dur = 3200 + Math.random() * 1400;
     const a = h.animate([
       {transform:T(cx + sw()*.3, cy, .5), opacity:0},
       {transform:T(cx + sw(), cy - rise*.25, 1), opacity:1, offset:.15},
@@ -277,8 +279,8 @@ function heartRain(n = 10){
     a.onfinish = () => h.remove();
   }
 }
-setTimeout(() => heartRain(8), 6000);
-setInterval(() => heartRain(8 + Math.floor(Math.random() * 5)), CONFIG.tapRainEverySeconds * 1000);
+setTimeout(() => heartRain(5), 6000);
+setInterval(() => heartRain(5 + Math.floor(Math.random() * 3)), CONFIG.tapRainEverySeconds * 1000);
 
 /* =========================================================
    GELEMBUNG BESAR DI TENGAH (ajakan bergilir & milestone) — antre satu per satu
@@ -290,24 +292,25 @@ window.showAlert = showAlert;
 async function next(){
   if (!queue.length) { busy = false; return; }
   busy = true;
-  const a = queue.shift(), V = vh(), size = 23 * V;
+  const a = queue.shift(), V = vh(), size = 14 * V;
   const b = document.createElement('div');
   b.className = 'bub alert' + (a.gold ? ' gold' : '');
   const small = document.createElement('small'), em = document.createElement('em');
   small.textContent = a.small; em.textContent = a.main;
   b.append(small, em, document.createTextNode(a.line));
 
-  const x = innerWidth/2 - size/2, y = 44*V;
-  b.style.left = '0px'; b.style.top = '0px'; b.style.transform = T(x, 106*V);
+  /* kecil dan di pinggir kanan atas (di bawah gelembung "Open mabar"), tidak menutupi tengah layar */
+  const x = innerWidth - size - 1.2*V, y = 16*V;
+  b.style.left = '0px'; b.style.top = '0px'; b.style.transform = T(x, y + 5*V, .5);
   stage.appendChild(b);
-  await b.animate([{transform:T(x,106*V,.6),opacity:0},{transform:T(x-3*V,80*V,.9),opacity:1,offset:.5},{transform:T(x+2*V,y+3*V,1),offset:.85},{transform:T(x,y,1)}],
-                  {duration:1700, easing:'ease-out', fill:'forwards'}).finished;
-  if (a.rain) heartRain(12);
-  await b.animate([{transform:T(x,y)},{transform:T(x,y-1.2*V,1.03)},{transform:T(x,y)}],
-                  {duration:3200, easing:'ease-in-out', fill:'forwards'}).finished;
+  await b.animate([{transform:T(x,y+5*V,.5),opacity:0},{transform:T(x,y-.8*V,1.05),opacity:1,offset:.7},{transform:T(x,y,1),opacity:1}],
+                  {duration:800, easing:'ease-out', fill:'forwards'}).finished;
+  if (a.rain) heartRain(6);
+  await b.animate([{transform:T(x,y)},{transform:T(x,y-1*V,1.03)},{transform:T(x,y)}],
+                  {duration:2600, easing:'ease-in-out', fill:'forwards'}).finished;
   b.style.transform = T(x, y);
   await popAndRemove(b, x + size/2, y + size/2);
-  burst(x + size/2, y + size/2, 8);
+  burst(x + size/2, y + size/2, 6);
   await wait(400);
   next();
 }
@@ -348,7 +351,7 @@ function tick(){
   }
 }
 function milestone(min){
-  showAlert({ gold:true, rain:true, small:'udah live ✦', main: milestoneText(min), line:'makasih yang masih nemenin 🌸' });
+  showAlert({ gold:true, rain:true, small:'udah live ✦', main: milestoneText(min), line:'makasih nemenin 🌸' });
 }
 tick(); setInterval(tick, 1000);
 
